@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hydra http-post-form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='black'/%3E%3Ctext x='50%25' y='60%25' font-size='38' text-anchor='middle' fill='%230f0' font-family='monospace' dy='.3em'%3E%3E_%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Hydra http-post-form</h1>
+        <form>
+            <!-- Parameter -l or -L -->
+            <div class="mb-3">
+                <label class="form-label">Parameter -l or -L</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="useFileForL">
+                    <label class="form-check-label" for="useFileForL">Use file (-L)</label>
+                </div>
+                <input type="text" class="form-control mt-2" id="lValue" placeholder="Enter value for -l">
+                <input type="file" class="form-control mt-2" id="LFile" style="display: none;">
+            </div>
+
+            <!-- Parameter -p or -P -->
+            <div class="mb-3">
+                <label class="form-label">Parameter -p or -P</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="useFileForP">
+                    <label class="form-check-label" for="useFileForP">Use file (-P)</label>
+                </div>
+                <input type="text" class="form-control mt-2" id="pValue" placeholder="Enter value for -p">
+                <input type="file" class="form-control mt-2" id="PFile" style="display: none;">
+            </div>
+
+            <div class="row mb-3">
+                <!-- IP Address -->
+                <div class="col-md-6">
+                    <label for="ipAddress" class="form-label">IP Address</label>
+                    <input type="text" class="form-control" id="ipAddress" placeholder="Enter IP address">
+                </div>
+
+                <!-- Admin Path -->
+                <div class="col-md-6">
+                    <label for="adminPath" class="form-label">Admin Path</label>
+                    <input type="text" class="form-control" id="adminPath" value="/admin/">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <!-- User and Pass -->
+                <div class="col-md-6">
+                    <label for="userPass" class="form-label">^USER^ and ^PASS^</label>
+                    <input type="text" class="form-control" id="userPass" value="user=^USER^&pass=^PASS^">
+                </div>
+
+                <!-- Error Message -->
+                <div class="col-md-6">
+                    <label for="errorMessage" class="form-label">Error Message</label>
+                    <input type="text" class="form-control" id="errorMessage" value="Username or password invalid">
+                </div>
+            </div>
+        </form>
+
+        <!-- Generated Command -->
+        <div class="mb-3">
+            <label for="generatedCommand" class="form-label">Generated Command</label>
+            <div class="input-group">
+                <textarea id="generatedCommand" class="form-control" rows="5" cols="100" readonly></textarea>
+                <button type="button" class="btn btn-success" id="copyCommandBtn" title="Copy to clipboard">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const useFileForL = document.getElementById('useFileForL');
+        const lValue = document.getElementById('lValue');
+        const LFile = document.getElementById('LFile');
+        const useFileForP = document.getElementById('useFileForP');
+        const pValue = document.getElementById('pValue');
+        const PFile = document.getElementById('PFile');
+        const ipAddress = document.getElementById('ipAddress');
+        const adminPath = document.getElementById('adminPath');
+        const userPass = document.getElementById('userPass');
+        const errorMessage = document.getElementById('errorMessage');
+        const generatedCommand = document.getElementById('generatedCommand');
+
+        useFileForL.addEventListener('change', () => {
+            if (useFileForL.checked) {
+                lValue.style.display = 'none';
+                LFile.style.display = 'block';
+            } else {
+                lValue.style.display = 'block';
+                LFile.style.display = 'none';
+            }
+            updateCommand();
+        });
+
+        useFileForP.addEventListener('change', () => {
+            if (useFileForP.checked) {
+                pValue.style.display = 'none';
+                PFile.style.display = 'block';
+            } else {
+                pValue.style.display = 'block';
+                PFile.style.display = 'none';
+            }
+            updateCommand();
+        });
+
+        function updateCommand() {
+            const lParam = useFileForL.checked ? `-L ${LFile.value}` : `-l ${lValue.value}`;
+            const pParam = useFileForP.checked ? `-P ${PFile.value || '/usr/share/wordlists/rockyou.txt'}` : `-p ${pValue.value}`;
+            const ip = ipAddress.value;
+            const admin = adminPath.value;
+            const userPassValue = userPass.value;
+            const error = errorMessage.value;
+
+            const command = `hydra ${lParam} ${pParam} ${ip} http-post-form "${admin}:${userPassValue}:${error}"`;
+            generatedCommand.value = command;
+        }
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', updateCommand);
+            input.addEventListener('change', updateCommand);
+        });
+
+        document.getElementById('copyCommandBtn').addEventListener('click', function() {
+            const textarea = document.getElementById('generatedCommand');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            this.textContent = 'Copied!';
+            setTimeout(() => { this.textContent = 'Copy'; }, 1500);
+        });
+
+        // Initialize the command on page load
+        updateCommand();
+    </script>
+</body>
+</html>
