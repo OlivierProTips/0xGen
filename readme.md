@@ -33,7 +33,7 @@ The main feature is a **Hydra http-post-form command generator** with a hacking-
 
 ## Preview
 
-![screenshot](screenshot.png?) 
+![screenshot](screenshot.png) 
 
 ## License
 
