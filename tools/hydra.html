@@ -73,6 +73,13 @@
         </div>
     </div>
 
+    <div id="footer-placeholder"></div>
+    <script>
+        fetch('../footer.html')
+          .then(response => response.text())
+          .then(html => { document.getElementById('footer-placeholder').innerHTML = html; });
+    </script>
+
     <script>
         const useFileForL = document.getElementById('useFileForL');
         const lValue = document.getElementById('lValue');

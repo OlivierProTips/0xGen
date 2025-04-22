@@ -20,6 +20,7 @@
             <div id="hashType" class="fw-bold text-success"></div>
         </div>
     </div>
+    <div id="footer-placeholder"></div>
     <script src="../js/algorithms.js"></script>
     <script>
         const hashInput = document.getElementById('hashInput');
@@ -35,6 +36,10 @@
             }
             hashType.textContent = types && types.length ? types.join(', ') : 'Unknown';
         });
+
+        fetch('../footer.html')
+          .then(response => response.text())
+          .then(html => { document.getElementById('footer-placeholder').innerHTML = html; });
     </script>
 </body>
 </html>
