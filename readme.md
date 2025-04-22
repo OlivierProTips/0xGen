@@ -39,9 +39,9 @@ It features several command generators and hash utilities with a hacking-inspire
 
 ## Preview
 
-![hydra-screenshot](/images/hydra-screenshot.png)  
-![hashcat-screenshot](/images/hashcat-screenshot.png)  
-![hash-identifier-screenshot](/images/hash-identifier-screenshot.png)  
+![hydra-screenshot](images/hydra-screenshot.png)  
+![hashcat-screenshot](images/hashcat-screenshot.png)  
+![hash-identifier-screenshot](images/hash-identifier-screenshot.png)  
 
 ## License
 
