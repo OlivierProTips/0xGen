@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashcat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='100%25' height='100%25' fill='black'/%3E%3Ctext x='50%25' y='60%25' font-size='38' text-anchor='middle' fill='%230f0' font-family='monospace' dy='.3em'%3E%23%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <style>
+        /* Optionally, add some custom style for the datalist dropdown */
+        input[list]::-webkit-calendar-picker-indicator {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 mb-5">
+        <h1>Hashcat Command Generator</h1>
+        <form>
+            <!-- Attack Mode -->
+            <div class="mb-3">
+                <label for="attackMode" class="form-label">Attack Mode (-a)</label>
+                <select class="form-select" id="attackMode">
+                    <option value="0">0 - Straight (wordlist)</option>
+                    <!-- <option value="1">1 - Combination</option> -->
+                    <option value="3">3 - Brute-force</option>
+                    <!-- <option value="6">6 - Hybrid Wordlist + Mask</option> -->
+                    <!-- <option value="7">7 - Hybrid Mask + Wordlist</option> -->
+                </select>
+            </div>
+
+            <!-- Hash Mode -->
+            <div class="mb-3">
+                <label for="hashMode" class="form-label">Hash Mode (-m)</label>
+                <input class="form-control" list="hashModes" id="hashMode" placeholder="Type to search...">
+                <datalist id="hashModes">
+                    <option value="0">MD5</option>
+                    <option value="10">md5($pass.$salt)</option>
+                    <option value="20">md5($salt.$pass)</option>
+                    <option value="30">md5(unicode($pass).$salt)</option>
+                    <option value="40">md5($salt.unicode($pass))</option>
+                    <option value="50">HMAC-MD5 (key = $pass)</option>
+                    <option value="60">HMAC-MD5 (key = $salt)</option>
+                    <option value="100">SHA1</option>
+                    <option value="110">sha1($pass.$salt)</option>
+                    <option value="120">sha1($salt.$pass)</option>
+                    <option value="130">sha1(unicode($pass).$salt)</option>
+                    <option value="140">sha1($salt.unicode($pass))</option>
+                    <option value="150">HMAC-SHA1 (key = $pass)</option>
+                    <option value="160">HMAC-SHA1 (key = $salt)</option>
+                    <option value="200">MySQL323</option>
+                    <option value="300">MySQL4.1/MySQL5</option>
+                    <option value="400">phpass, WordPress (MD5)</option>
+                    <option value="500">md5crypt, MD5(Unix), FreeBSD, Cisco-IOS</option>
+                    <option value="900">MD4</option>
+                    <option value="1000">NTLM</option>
+                    <option value="1100">Domain Cached Credentials (DCC), MS Cache</option>
+                    <option value="1400">SHA256</option>
+                    <option value="1410">sha256($pass.$salt)</option>
+                    <option value="1420">sha256($salt.$pass)</option>
+                    <option value="1430">sha256(unicode($pass).$salt)</option>
+                    <option value="1440">sha256($salt.unicode($pass))</option>
+                    <option value="1500">descrypt, DES(Unix), Traditional DES</option>
+                    <option value="1700">SHA512</option>
+                    <option value="1710">sha512($pass.$salt)</option>
+                    <option value="1720">sha512($salt.$pass)</option>
+                    <option value="1730">sha512(unicode($pass).$salt)</option>
+                    <option value="1740">sha512($salt.unicode($pass))</option>
+                    <option value="1800">sha512crypt, SHA512(Unix)</option>
+                    <option value="2100">Domain Cached Credentials 2 (DCC2), MS Cache 2</option>
+                    <option value="2200">bcrypt $2*$, Blowfish (Unix)</option>
+                    <option value="2400">Cisco-PIX MD5</option>
+                    <option value="2500">WPA/WPA2</option>
+                    <option value="2600">Double MD5</option>
+                    <option value="3200">bcrypt (Blowfish)</option>
+                    <option value="3300">MD5(Chap), iSCSI CHAP authentication</option>
+                    <option value="3500">md5($salt.md5($salt.$pass))</option>
+                    <option value="3610">md5(md5($pass))</option>
+                    <option value="3710">md5($salt.md5($pass))</option>
+                    <option value="3720">md5(md5($pass).$salt)</option>
+                    <option value="3800">md5(md5(md5($pass)))</option>
+                    <option value="3910">md5($pass.$salt.$pass.$salt)</option>
+                    <option value="4010">md5($salt.$pass.$salt)</option>
+                    <option value="4110">md5($salt.$pass.$salt.$pass)</option>
+                    <option value="4210">md5($pass.$salt.$pass)</option>
+                    <option value="4300">md5($pass.$pass.$pass.$salt)</option>
+                    <option value="4400">md5($salt.$pass.$pass.$pass)</option>
+                    <option value="4500">md5($pass.$salt.$salt.$pass)</option>
+                    <option value="4600">md5($salt.$salt.$pass.$pass)</option>
+                    <option value="4700">md5($pass.$salt.$pass.$salt)</option>
+                    <option value="4800">md5($salt.$pass.$salt.$pass)</option>
+                    <option value="4900">md5($pass.$salt.$salt.$salt)</option>
+                    <option value="5000">md5($salt.$salt.$salt.$pass)</option>
+                    <option value="5100">md5($pass.$pass.$salt.$salt)</option>
+                    <option value="5200">md5($salt.$salt.$pass.$pass)</option>
+                    <option value="5300">md5($pass.$salt.$salt.$salt)</option>
+                    <option value="5400">md5($salt.$salt.$salt.$pass)</option>
+                    <option value="5500">md5($pass.$pass.$pass.$salt)</option>
+                    <option value="5600">md5($salt.$pass.$pass.$pass)</option>
+                    <option value="5700">md5($pass.$salt.$pass.$salt)</option>
+                    <option value="5800">md5($salt.$pass.$salt.$pass)</option>
+                    <option value="5900">md5($pass.$salt.$salt.$pass)</option>
+                    <option value="6000">md5($salt.$salt.$pass.$salt)</option>
+                    <option value="6100">md5($pass.$salt.$pass.$pass)</option>
+                    <option value="6200">md5($salt.$pass.$salt.$salt)</option>
+                    <option value="6300">md5($pass.$salt.$salt.$salt)</option>
+                    <option value="6400">md5($salt.$salt.$salt.$pass)</option>
+                    <option value="6500">md5($pass.$pass.$pass.$salt)</option>
+                    <option value="6600">md5($salt.$pass.$pass.$pass)</option>
+                    <option value="6700">md5($pass.$salt.$pass.$salt)</option>
+                    <option value="6800">md5($salt.$pass.$salt.$pass)</option>
+                    <option value="6900">md5($pass.$salt.$salt.$pass)</option>
+                    <option value="7000">md5($salt.$salt.$pass.$salt)</option>
+                    <option value="7100">md5($pass.$salt.$pass.$pass)</option>
+                    <option value="7200">md5($salt.$pass.$salt.$salt)</option>
+                    <option value="7300">md5($pass.$salt.$salt.$salt)</option>
+                    <option value="7400">md5($salt.$salt.$salt.$pass)</option>
+                    <option value="7500">md5($pass.$pass.$pass.$salt)</option>
+                    <option value="7600">md5($salt.$pass.$pass.$pass)</option>
+                    <option value="7700">md5($pass.$salt.$pass.$salt)</option>
+                    <option value="7800">md5($salt.$pass.$salt.$pass)</option>
+                    <option value="7900">md5($pass.$salt.$salt.$pass)</option>
+                    <option value="8000">md5($salt.$salt.$pass.$salt)</option>
+                    <option value="9000">MD4</option>
+                    <option value="10000">NTLM</option>
+                    <option value="11000">Domain Cached Credentials (DCC), MS Cache</option>
+                    <option value="14000">SHA256</option>
+                    <option value="17000">SHA512</option>
+                    <option value="18000">sha512crypt, SHA512(Unix)</option>
+                    <option value="22000">WPA/WPA2</option>
+                    <option value="30000">LM</option>
+                    <!-- Add more from hashcat --help if needed -->
+                </datalist>
+            </div>
+
+            <!-- Hash -->
+            <div class="mb-3">
+                <label for="hashInput" class="form-label">Hash</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="hashInput" placeholder="Enter hash">
+                    <input type="file" class="form-control" id="hashFile" style="display:none;">
+                    <button class="btn btn-outline-success" type="button" id="useFileForHash">File</button>
+                </div>
+            </div>
+
+            <!-- Wordlist or Mask (dynamic) -->
+            <div class="mb-3" id="wordlistGroup">
+                <label for="wordlistFile" class="form-label">Wordlist</label>
+                <input type="file" class="form-control" id="wordlistFile">
+            </div>
+            <div class="mb-3" id="maskGroup" style="display:none;">
+                <label for="maskInput" class="form-label">
+                    Mask
+                    <span 
+                        id="maskHelp"
+                        style="cursor:pointer;" 
+                        data-tippy-content="
+?a : all printable<br>
+?l : lowercase<br>
+?u : uppercase<br>
+?d : digit<br>
+?s : special char<br>
+Example: ?l?l?l?l?d?d"
+                    >
+                        <strong>?</strong>
+                    </span>
+                </label>
+                <input type="text" class="form-control" id="maskInput" placeholder="?a?a?a?a?a?a">
+            </div>
+
+            <div class="mb-3" id="incrementGroup" style="display:none;">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="incrementCheckbox">
+                    <label class="form-check-label" for="incrementCheckbox">Add <code>--increment</code></label>
+                </div>
+            </div>
+        </form>
+
+        <!-- Generated Command -->
+        <div class="mb-3">
+            <label for="generatedCommand" class="form-label">Generated Command</label>
+            <div class="input-group">
+                <textarea id="generatedCommand" class="form-control" rows="3" cols="100" readonly></textarea>
+                <button type="button" class="btn btn-success" id="copyCommandBtn" title="Copy to clipboard">Copy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const attackMode = document.getElementById('attackMode');
+        const hashMode = document.getElementById('hashMode');
+        const hashInput = document.getElementById('hashInput');
+        const hashFile = document.getElementById('hashFile');
+        const useFileForHash = document.getElementById('useFileForHash');
+        const wordlistGroup = document.getElementById('wordlistGroup');
+        const wordlistFile = document.getElementById('wordlistFile');
+        const maskGroup = document.getElementById('maskGroup');
+        const maskInput = document.getElementById('maskInput');
+        const incrementGroup = document.getElementById('incrementGroup');
+        const incrementCheckbox = document.getElementById('incrementCheckbox');
+        const generatedCommand = document.getElementById('generatedCommand');
+        const copyCommandBtn = document.getElementById('copyCommandBtn');
+
+        let hashIsFile = false;
+
+        useFileForHash.addEventListener('click', function() {
+            hashIsFile = !hashIsFile;
+            if (hashIsFile) {
+                hashInput.style.display = 'none';
+                hashFile.style.display = 'block';
+                useFileForHash.classList.add('active');
+            } else {
+                hashInput.style.display = 'block';
+                hashFile.style.display = 'none';
+                useFileForHash.classList.remove('active');
+            }
+            updateCommand();
+        });
+
+        // Show/hide wordlist or mask depending on attack mode
+        attackMode.addEventListener('change', function() {
+            if (attackMode.value === "0") {
+                wordlistGroup.style.display = '';
+                wordlistFile.style.display = '';
+                maskGroup.style.display = 'none';
+                incrementGroup.style.display = 'none';
+            } else if (attackMode.value === "3") {
+                wordlistGroup.style.display = 'none';
+                maskGroup.style.display = '';
+                incrementGroup.style.display = '';
+            } else {
+                wordlistGroup.style.display = 'none';
+                maskGroup.style.display = 'none';
+                incrementGroup.style.display = 'none';
+            }
+            updateCommand();
+        });
+
+        // Tooltip for mask input with Tippy.js
+        document.addEventListener('DOMContentLoaded', function() {
+            tippy('#maskHelp', {
+                allowHTML: true,
+                placement: 'top',
+                delay: [0, 0],
+                theme: 'light-border'
+            });
+        });
+
+        function updateCommand() {
+            const a = attackMode.value;
+            const m = hashMode.value;
+            let hashPart = '';
+            if (hashIsFile) {
+                hashPart = hashFile.value ? hashFile.value : '';
+            } else {
+                hashPart = `"${hashInput.value}"`;
+            }
+            let command = `hashcat -a ${a} -m ${m} ${hashPart}`;
+            if (a === "0") {
+                // If no file selected, use default value
+                const wordlist = wordlistFile.value || "/usr/share/wordlists/rockyou.txt";
+                command += ` ${wordlist}`;
+            } else if (a === "3") {
+                command += ` ${maskInput.value}`;
+                if (incrementCheckbox.checked) {
+                    command += " --increment";
+                }
+            }
+            generatedCommand.value = command;
+        }
+
+        // Listeners for dynamic fields
+        attackMode.addEventListener('change', updateCommand);
+        hashMode.addEventListener('input', updateCommand);
+        hashInput.addEventListener('input', updateCommand);
+        hashFile.addEventListener('change', updateCommand);
+        maskInput && maskInput.addEventListener('input', updateCommand);
+        incrementCheckbox.addEventListener('change', updateCommand);
+
+        copyCommandBtn.addEventListener('click', function() {
+            generatedCommand.select();
+            generatedCommand.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            this.textContent = 'Copied!';
+            setTimeout(() => { this.textContent = 'Copy'; }, 1500);
+        });
+
+        // Initialize on load
+        attackMode.dispatchEvent(new Event('change'));
+        updateCommand();
+    </script>
+</body>
+</html>
