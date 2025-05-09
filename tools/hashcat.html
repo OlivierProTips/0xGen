@@ -147,6 +147,14 @@
                 </div>
             </div>
 
+            <!-- Usernames in file checkbox -->
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="usernamesInFileCheckbox">
+                    <label class="form-check-label" for="usernamesInFileCheckbox">Usernames are in the hash file (<code>--username</code>)</label>
+                </div>
+            </div>
+
             <!-- Wordlist or Mask (dynamic) -->
             <div class="mb-3" id="wordlistGroup">
                 <label for="wordlistFile" class="form-label">Wordlist</label>
@@ -262,13 +270,13 @@ Example: ?l?l?l?l?d?d"
             const m = hashMode.value;
             let hashPart = '';
             if (hashIsFile) {
-                hashPart = hashFile.value ? hashFile.value : '';
+                // Utilise seulement le nom du fichier sans le chemin
+                hashPart = hashFile.files && hashFile.files.length > 0 ? hashFile.files[0].name : '';
             } else {
                 hashPart = `"${hashInput.value}"`;
             }
             let command = `hashcat -a ${a} -m ${m} ${hashPart}`;
             if (a === "0") {
-                // If no file selected, use default value
                 const wordlist = wordlistFile.value || "/usr/share/wordlists/rockyou.txt";
                 command += ` ${wordlist}`;
             } else if (a === "3") {
@@ -276,6 +284,9 @@ Example: ?l?l?l?l?d?d"
                 if (incrementCheckbox.checked) {
                     command += " --increment";
                 }
+            }
+            if (usernamesInFileCheckbox && usernamesInFileCheckbox.checked) {
+                command += " --username";
             }
             generatedCommand.value = command;
         }
