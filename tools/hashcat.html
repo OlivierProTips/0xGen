@@ -298,6 +298,7 @@ Example: ?l?l?l?l?d?d"
         hashFile.addEventListener('change', updateCommand);
         maskInput && maskInput.addEventListener('input', updateCommand);
         incrementCheckbox.addEventListener('change', updateCommand);
+        usernamesInFileCheckbox.addEventListener('change', updateCommand);
 
         copyCommandBtn.addEventListener('click', function() {
             generatedCommand.select();
